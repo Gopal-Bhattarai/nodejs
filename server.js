@@ -2,18 +2,21 @@ import express from "express";
 import {MongoClient, ObjectId} from 'mongodb';
 import cors from 'cors';
 import * as dotenv from 'dotenv'
+import sgMail from '@sendgrid/mail'
+
 dotenv.config();
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 const app = express();
 app.use(express.json());
 const port = process.env.PORT || 8000;
 const URI = "mongodb://127.0.0.1:27017"
+app.options('*',cors())
 
 const corsOptions = {
     origin: 'http://localhost:3000',
     optionsSuccessStatus: 200
 }
-app.options('*',cors())
 
 const conn = MongoClient.connect(URI, { useNewUrlParser: true}, (error,client)=>{
     if(error){
@@ -40,14 +43,25 @@ const conn = MongoClient.connect(URI, { useNewUrlParser: true}, (error,client)=>
         app.post("/create", cors(corsOptions), async (req, res)=>{
             const newRecord = req.body;
             console.log(req.body);
-
+            
             try {
-              const insert = await db.collection('todolist').insertOne(newRecord);
-              res.status(200).send(insert)        
-              console.log(insert);
+                const insert = await db.collection('todolist').insertOne(newRecord);
+                res.status(200).send(insert)        
+                console.log(insert);
             } catch (e) {
                 console.log(e);
             }
+        })
+        
+        app.post("/sendEmail",cors(corsOptions), async (req, res)=>{
+            const newEmail = req.body;
+            await sgMail.send({
+                to: newEmail.email,
+                from: 'gbhattarai55@gmail.com',
+                subject: newEmail.subject,
+                text: newEmail.body
+            })
+            res.status(200).send({'mssg':'Email sent successfully!'})
         })
         
         app.listen(port, console.log('Node Server is running at port ', port))
