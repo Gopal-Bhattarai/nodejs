@@ -9,7 +9,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 const app = express();
 app.use(express.json());
-const port = process.env.PORT || 8000;
+const port = 8088;
 const URI = "mongodb://127.0.0.1:27017"
 app.options('*',cors())
 
