@@ -13,6 +13,8 @@ userRouter.post("/create", cors(corsOptions), async (req,res)=>{
     console.log(req.body);
     const {fullName, email, password, ...rest } = req.body;
   
+
+
     try 
     {
       const user = await User.create({ fullName, email, password, ...rest});
