@@ -9,10 +9,14 @@ const todoSchema = mongoose.Schema(
         completed: {
             type: Boolean,
             required: true
+        },
+        user :{
+            type: String
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now
         }
-    },
-    {
-        timeStamp: true,
     }
 );
 

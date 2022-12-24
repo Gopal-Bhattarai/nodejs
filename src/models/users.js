@@ -1,5 +1,8 @@
 import mongoose from "mongoose";
 import validator from "validator";
+import bcrypt from 'bcryptjs'
+
+const saltRounds = 10;
 
 const userSchema = mongoose.Schema(
     {
@@ -34,12 +37,33 @@ const userSchema = mongoose.Schema(
                     throw new Error ('Password: mimimum 6 chars, AtLeast: 1 Small, 1 Capital & 1 number');
                 }
             }
-        }
-    },
-    {
-        timeStamps: true,
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now
+        }  
     }
 );
+
+userSchema.pre('save', function(next) {
+    const user = this;
+
+    // only hash the password if it has been modified (or is new)
+    if(!user.isModified('password')) return next();
+
+    //generate a Salt
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(user.password, salt)
+    user.password = hash;
+    next();
+})
+
+userSchema.methods.comparePassword = function(candidatePassword,cb) {
+    bcrypt.compare(candidatePassword, this.password, function(err, isMatch){
+        if(err) return cb(err);
+        cb(null, isMatch);
+    });
+};
 
 const User = mongoose.model("User", userSchema);
 
