@@ -13,9 +13,9 @@ const userSchema = mongoose.Schema(
                 if(!validator.isLength(value, {min:3, max: 50})){
                     throw new Error ('Must be at least 3 characters');
                 }
-                if(!validator.isAlpha(value)){
-                    throw new Error ('Should not contain numbers');
-                }
+                // if(!validator.isAlpha(value)){
+                //     throw new Error ('Should not contain numbers');
+                // }
             }
         },
         email: {

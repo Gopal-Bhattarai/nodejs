@@ -40,11 +40,13 @@ userRouter.post("/signup", cors(corsOptions), async (req, res) => {
 });
 
 //Get user on /api/users/login or Login form, No Auth
-userRouter.get("/login", cors(corsOptions), async (req, res) => {
+userRouter.post("/login", cors(corsOptions), async (req, res) => {
   const { email, password, ...rest } = req.body;
+  console.log(password);
 
   try {
     const user = await User.findOne({ email });
+    console.log(user);
     user.comparePassword(password, function (err, isMatch) {
       if (err) throw err;
       !isMatch ? res.status(401).send("Invalid Credentials!") : void 0;
