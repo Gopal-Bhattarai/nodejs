@@ -1,7 +1,7 @@
 import cors from 'cors';
 import express from 'express';
 import Todo from '../models/todo.js';
-import corsOptions from './corsOptions.js';
+import corsOptions from '../middleware/corsOptions.js';
 
 const todoRouter = express.Router();
 

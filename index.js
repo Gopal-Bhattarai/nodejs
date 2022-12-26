@@ -10,13 +10,13 @@ import emailRouter from './src/routes/emailRoute.js';
 import connectToMongo from './src/database/DB.js'
 connectToMongo();
 
-//Import dotenv package and read config of .env file. 
+//creating app as an express server. 
+const app = express();
+
+//Import dotenv package and read PORT number from .env file. 
 import dotenv from 'dotenv';
 dotenv.config()
-
-const app = express();
 const port = process.env.PORT;
-
 
 //Available Routes
 app.use("/api/users", userRouter);

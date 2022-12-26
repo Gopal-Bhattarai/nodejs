@@ -2,7 +2,7 @@ import cors from 'cors';
 import express from 'express';
 import fetchuser from '../middleware/fetchuser.js';
 import Note from '../models/notes.js'
-import corsOptions from './corsOptions.js';
+import corsOptions from '../middleware/corsOptions.js';
 
 const noteRouter = express.Router();
 
@@ -16,7 +16,7 @@ noteRouter.get('/fetchallnotes', fetchuser, cors(corsOptions), async(req, res)=>
         res.json(note);
     } catch (error) {
         console.log(`Error: ${error.message}`);
-        res.status(400).send(error.message);
+        res.status(403).send(error.message);
     }
 })
 
@@ -31,7 +31,7 @@ noteRouter.post('/addnote', fetchuser, cors(corsOptions), async(req, res)=>{
         res.json(saveNote)
     } catch (error) {
         console.log(`Error: ${error.message}`);
-        res.status(400).send(error.message);
+        res.status(403).send(error.message);
     }
 })
 
@@ -53,7 +53,7 @@ noteRouter.put('/updatenote/:id', fetchuser, cors(corsOptions), async(req, res)=
         res.status(200).send({note})
     } catch (error) {
         console.log(`Error: ${error.message}`);
-        res.status(400).send(error.message);
+        res.status(403).send(error.message);
     }
 })
 
@@ -69,10 +69,10 @@ noteRouter.delete('/deletenote/:id', fetchuser, cors(corsOptions), async(req, re
         //delete if found
         await note.deleteOne();
 
-        res.status(200).send('Deleted')
+        res.status(200).json({message: "Deleted"})
     } catch (error) {
         console.log(`Error: ${error.message}`);
-        res.status(400).send(error.message);
+        res.status(403).send(error.message);
     }
 })
 

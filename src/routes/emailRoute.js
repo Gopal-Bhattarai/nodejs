@@ -1,7 +1,7 @@
 import cors from 'cors'
 import sgMail from '@sendgrid/mail'
 import express from 'express';
-import corsOptions from './corsOptions.js';
+import corsOptions from '../middleware/corsOptions.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
