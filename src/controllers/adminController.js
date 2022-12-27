@@ -1,4 +1,5 @@
 import expresAsyncHandler from 'express-async-handler'
+import { ObjectId } from 'mongodb';
 import Note from '../models/notes.js';
 import User from '../models/users.js';
 
@@ -11,12 +12,16 @@ const getAllUsers = expresAsyncHandler( async (req, res) => {
       console.log(`Error: ${error.message}`);
       res.status(400).json({message: error.message});
     }
-  });
+});
 
-  const deleteUser = expresAsyncHandler(async (req, res) => {
+const deleteUser = expresAsyncHandler(async (req, res) => {
     try {
       const id = req.params.id;
+      //delete user
       const user = await User.findByIdAndDelete(id);
+
+      //delete user's all notes
+      await Note.deleteMany({user: new ObjectId(id)})
       if(!user) {
         return res.status(400).json({message: 'User not found'});
       }
@@ -25,9 +30,9 @@ const getAllUsers = expresAsyncHandler( async (req, res) => {
       console.log(`Error: ${error.message}`);
       res.status(400).json({message: error.message});
     }
-  })
+})
 
-  const getAllNotes = expresAsyncHandler(async(req, res)=>{
+const getAllNotes = expresAsyncHandler(async(req, res)=>{
     try {
         const note = await Note.find({})
         .populate('user')
@@ -72,4 +77,4 @@ const deleteNote = expresAsyncHandler(async(req, res)=>{
     }
 });
 
-  export {getAllUsers, deleteUser, getAllNotes, deleteNote}
+export {getAllUsers, deleteUser, getAllNotes, deleteNote}

@@ -23,7 +23,6 @@ const createUser = expressAsyncHadler(async (req, res) => {
       const authtoken = generateToken(user);
       status = true;
       res.status(200).json({status,  authtoken });
-    res.status(200).json(user);
     } catch (error) {
       console.log(`Error: ${error.message}`);
       res.status(400).json({status, Error: error.message});
