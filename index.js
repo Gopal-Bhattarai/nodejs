@@ -5,6 +5,7 @@ import userRouter from './src/routes/User.js'
 import todoRouter from './src/routes/Todo.js';
 import noteRouter from './src/routes/Note.js';
 import emailRouter from './src/routes/emailRoute.js';
+import adminRouter from './src/routes/Admin.js';
 
 //connection to MongoDB written in ./src/DB.js and called underneath 
 import connectToMongo from './src/database/DB.js'
@@ -18,10 +19,13 @@ import dotenv from 'dotenv';
 dotenv.config()
 const port = process.env.PORT;
 
-//Available Routes
+//Available Routes for users
 app.use("/api/users", userRouter);
 app.use("/api/todo", todoRouter);
 app.use("/api/notes", noteRouter);
 app.use("/email", emailRouter);
+
+//Routes for Admin
+app.use("/api/admin", adminRouter);
 
 app.listen(port, console.log('Server is running at port ', port))

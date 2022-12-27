@@ -41,6 +41,10 @@ const userSchema = mongoose.Schema(
         createdAt: {
             type: Date,
             default: Date.now
+        },
+        role: {
+            type: Number,
+            default: 0
         }  
     }
 );

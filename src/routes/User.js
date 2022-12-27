@@ -3,7 +3,8 @@ import cors from "cors";
 import jwt from "jsonwebtoken";
 import User from "../models/users.js";
 import corsOptions from "../middleware/corsOptions.js";
-import fetchuser from '../middleware/fetchuser.js'
+import isAuthenticated from "../middleware/Auth.js";
+import { isAdmin } from "../middleware/Auth.js";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -68,14 +69,10 @@ userRouter.post("/login", cors(corsOptions), async (req, res) => {
 });
 
 //Get Loggedin user details on /api/users/getuser, Auth Required.
-userRouter.post("/getuser", fetchuser, cors(corsOptions), async (req, res) => {
-  const { email, password, ...rest } = req.body;
-
+userRouter.post("/getuser", isAuthenticated, cors(corsOptions), async (req, res) => {
+  //const { email, password, ...rest } = req.body;
   try {
-    const userid = req.user.id;
-    const user = await User.findById(userid).select("-password")
-    console.log(user);
-    res.status(200).send(user)
+    res.status(200).send(req.user);
   } catch (error) {
     console.log(`Error: ${error.message}`);
     res.status(400).send(error.message);
@@ -83,7 +80,7 @@ userRouter.post("/getuser", fetchuser, cors(corsOptions), async (req, res) => {
 });
 
 //User Profile changed (fullName, password) /api/users/updateuser, Auth Required.
-userRouter.put("/updateuser/:id", fetchuser, cors(corsOptions), async (req, res) => {
+userRouter.put("/updateuser/:id", isAuthenticated, cors(corsOptions), async (req, res) => {
   try {
     const {fullName, password} = req.body;
     console.log(req.params.id);

@@ -1,6 +1,6 @@
 import cors from 'cors';
 import express from 'express';
-import fetchuser from '../middleware/fetchuser.js';
+import isAuthenticated from '../middleware/Auth.js';
 import Note from '../models/notes.js'
 import corsOptions from '../middleware/corsOptions.js';
 
@@ -10,7 +10,7 @@ noteRouter.options("*",cors());
 noteRouter.use(express.json());
 
 //Route to fetch all notes for corresponding user: Login required
-noteRouter.get('/fetchallnotes', fetchuser, cors(corsOptions), async(req, res)=>{
+noteRouter.get('/fetchallnotes', isAuthenticated, cors(corsOptions), async(req, res)=>{
     try {
         const note = await Note.find({user: req.user.id});
         res.json(note);
@@ -21,7 +21,7 @@ noteRouter.get('/fetchallnotes', fetchuser, cors(corsOptions), async(req, res)=>
 })
 
 //Route to create a new note for corresponding user: Login required
-noteRouter.post('/addnote', fetchuser, cors(corsOptions), async(req, res)=>{
+noteRouter.post('/addnote', isAuthenticated, cors(corsOptions), async(req, res)=>{
     try {
         const {title, description, tag } = req.body;
         const note = new Note ({
@@ -36,7 +36,7 @@ noteRouter.post('/addnote', fetchuser, cors(corsOptions), async(req, res)=>{
 })
 
 //Route to update a new note for corresponding user: Login required
-noteRouter.put('/updatenote/:id', fetchuser, cors(corsOptions), async(req, res)=>{
+noteRouter.put('/updatenote/:id', isAuthenticated, cors(corsOptions), async(req, res)=>{
     try {
         const {title, description, tag} = req.body;
 
@@ -58,7 +58,7 @@ noteRouter.put('/updatenote/:id', fetchuser, cors(corsOptions), async(req, res)=
 })
 
 //Route to delete a new note for corresponding user: Login required
-noteRouter.delete('/deletenote/:id', fetchuser, cors(corsOptions), async(req, res)=>{
+noteRouter.delete('/deletenote/:id', isAuthenticated, cors(corsOptions), async(req, res)=>{
     try {
         const id = req.params.id;
         const note = await Note.findOne({_id: req.params.id, user: req.user.id});
