@@ -1,16 +1,7 @@
-import cors from 'cors';
-import express from 'express';
-import isAuthenticated from '../middleware/Auth.js';
+import expressAsyncHadler from 'express-async-handler'
 import Note from '../models/notes.js'
-import corsOptions from '../middleware/corsOptions.js';
 
-const noteRouter = express.Router();
-
-noteRouter.options("*",cors());
-noteRouter.use(express.json());
-
-//Route to fetch all notes for corresponding user: Login required
-noteRouter.get('/fetchallnotes', isAuthenticated, cors(corsOptions), async(req, res)=>{
+const getNotes = expressAsyncHadler(async(req, res)=>{
     try {
         const note = await Note.find({user: req.user.id});
         res.json(note);
@@ -18,10 +9,9 @@ noteRouter.get('/fetchallnotes', isAuthenticated, cors(corsOptions), async(req, 
         console.log(`Error: ${error.message}`);
         res.status(403).send(error.message);
     }
-})
+});
 
-//Route to create a new note for corresponding user: Login required
-noteRouter.post('/addnote', isAuthenticated, cors(corsOptions), async(req, res)=>{
+const addNote = expressAsyncHadler(async(req, res)=>{
     try {
         const {title, description, tag } = req.body;
         const note = new Note ({
@@ -35,8 +25,7 @@ noteRouter.post('/addnote', isAuthenticated, cors(corsOptions), async(req, res)=
     }
 })
 
-//Route to update a new note for corresponding user: Login required
-noteRouter.put('/updatenote/:id', isAuthenticated, cors(corsOptions), async(req, res)=>{
+const updateNote = expressAsyncHadler(async(req, res)=>{
     try {
         const {title, description, tag} = req.body;
 
@@ -57,8 +46,7 @@ noteRouter.put('/updatenote/:id', isAuthenticated, cors(corsOptions), async(req,
     }
 })
 
-//Route to delete a new note for corresponding user: Login required
-noteRouter.delete('/deletenote/:id', isAuthenticated, cors(corsOptions), async(req, res)=>{
+const deleteNote = expressAsyncHadler(async(req, res)=>{
     try {
         const id = req.params.id;
         const note = await Note.findOne({_id: req.params.id, user: req.user.id});
@@ -76,4 +64,6 @@ noteRouter.delete('/deletenote/:id', isAuthenticated, cors(corsOptions), async(r
     }
 })
 
-export default noteRouter;
+export {
+    getNotes,  addNote, updateNote, deleteNote
+}

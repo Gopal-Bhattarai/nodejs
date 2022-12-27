@@ -1,11 +1,12 @@
 import express from 'express';
 
 //import Routes
-import userRouter from './src/routes/User.js'
-import todoRouter from './src/routes/Todo.js';
-import noteRouter from './src/routes/Note.js';
-import emailRouter from './src/routes/emailRoute.js';
-import adminRouter from './src/routes/Admin.js';
+import userRouter from './src/routers/userRouter.js'
+import todoRouter from './src/routers/todoRouter.js';
+import noteRouter from './src/routers/noteRouter.js';
+import emailRouter from './src/routers/emailRouter.js';
+import adminRouter from './src/routers/adminRouter.js';
+import productRouter from './src/routers/productRouter.js';
 
 //connection to MongoDB written in ./src/DB.js and called underneath 
 import connectToMongo from './src/database/DB.js'
@@ -24,6 +25,7 @@ app.use("/api/users", userRouter);
 app.use("/api/todo", todoRouter);
 app.use("/api/notes", noteRouter);
 app.use("/email", emailRouter);
+app.use("/api/products", productRouter);
 
 //Routes for Admin
 app.use("/api/admin", adminRouter);

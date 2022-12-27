@@ -1,8 +1,8 @@
 import mongoose from 'mongoose'
 import validator from 'validator';
 
-const noteSchema = mongoose.Schema({
-    title:{
+const productSchema = mongoose.Schema({
+    productName:{
         type: String,
         required: true,
         validate(value) {
@@ -10,6 +10,25 @@ const noteSchema = mongoose.Schema({
                 throw new Error ('Must be at 3 to 50 characters');
             }
         }
+    },
+    brand: {
+        type: String,
+        required: true,
+    },
+    category: {
+        type: String,
+        required: true,
+    },
+    price:{
+        type: Number,
+        required: true,
+    },
+    discount:{
+        type: Number,
+    },
+    quantityInStock: {
+        type: Number,
+        required: true,
     },
     description: {
         type: String,
@@ -30,10 +49,13 @@ const noteSchema = mongoose.Schema({
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'user'
+    },
+    image: {
+        
     }
 })
 
-const Note = mongoose.model("Note", noteSchema);
+const Product = mongoose.model("Product", productSchema);
 
-export default Note;
+export default Product;
