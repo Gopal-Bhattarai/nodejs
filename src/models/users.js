@@ -38,16 +38,20 @@ const userSchema = mongoose.Schema(
                 }
             }
         },
-        createdAt: {
+        date: {
             type: Date,
             default: Date.now
         },
         role: {
             type: Number,
             default: 0
+        },
+        avatar: {
+            type: String
         }  
-    }
-);
+    }, {
+    timestamps: true
+});
 
 userSchema.pre('save', function(next) {
     const user = this;

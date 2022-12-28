@@ -1,59 +1,50 @@
 import mongoose from 'mongoose'
-import validator from 'validator';
 
 const productSchema = mongoose.Schema({
     productName:{
         type: String,
-        required: true,
-        validate(value) {
-            if(!validator.isLength(value, {min:3, max: 50})){
-                throw new Error ('Must be at 3 to 50 characters');
-            }
-        }
+        required: true
     },
     brand: {
         type: String,
-        required: true,
     },
     category: {
         type: String,
-        required: true,
     },
     price:{
         type: Number,
-        required: true,
+        required: true
     },
     discount:{
-        type: Number,
+        type: Number
     },
     quantityInStock: {
         type: Number,
-        required: true,
+        default: 0
     },
     description: {
-        type: String,
-        required: true,
-        validate(value) {
-            if(!validator.isLength(value, {min: 6})){
-                throw new Error ('Minimum 6 characters');
-            }
-        }
+        type: String
     },
-    tag: {
+    sku:{
         type: String,
-        default: 'General'
+        unique: true
     },
-    date: {
-        type: Date,
-        default: Date.now
+    active:{
+        type: Boolean,
+        default: 1
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user'
     },
-    image: {
-        
-    }
+    avatar:{
+        type: Buffer
+    },
+    image: [{
+        type: Buffer
+    }]
+}, {
+    timestamp: true
 })
 
 const Product = mongoose.model("Product", productSchema);

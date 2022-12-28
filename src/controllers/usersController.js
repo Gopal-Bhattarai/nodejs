@@ -1,6 +1,7 @@
-import expressAsyncHadler from "express-async-handler"
+import expressAsyncHandler from "express-async-handler"
 import User from '../models/users.js'
 import jwt from "jsonwebtoken";
+// import sharp from "sharp";
 
 //Token creation process function
 const generateToken = (user) => {
@@ -11,9 +12,9 @@ const generateToken = (user) => {
     };
     const authtoken = jwt.sign(data, process.env.JWT_SECRET);
     return authtoken;
-  };
+};
 
-const createUser = expressAsyncHadler(async (req, res) => {
+const createUser = expressAsyncHandler(async (req, res) => {
     const { fullName, email, password, ...rest } = req.body;
     let status = false;
   
@@ -27,9 +28,9 @@ const createUser = expressAsyncHadler(async (req, res) => {
       console.log(`Error: ${error.message}`);
       res.status(400).json({status, Error: error.message});
     }
-})
+});
 
-const login = expressAsyncHadler(async (req, res) => {
+const login = expressAsyncHandler(async (req, res) => {
     const { email, password, ...rest } = req.body;
     let status = false;
   
@@ -52,18 +53,18 @@ const login = expressAsyncHadler(async (req, res) => {
       console.log(`Error: ${error.message}`);
       res.status(400).json({status, Error: error.message});
     }
-  })
+});
 
-const getUser = expressAsyncHadler(async (req, res) => {
+const getUser = expressAsyncHandler(async (req, res) => {
     try {
       res.status(200).send(req.user);
     } catch (error) {
       console.log(`Error: ${error.message}`);
       res.status(400).send(error.message);
     }
-  })
+});
 
-const updateUser = expressAsyncHadler(async (req, res) => {
+const updateUser = expressAsyncHandler(async (req, res) => {
     try {
       const {fullName, password} = req.body;
       console.log(req.params.id);
@@ -83,8 +84,48 @@ const updateUser = expressAsyncHadler(async (req, res) => {
       console.log(`Error: ${error.message}`);
       res.status(403).send(error.message);
   }
-  })
+});
+
+const uploadAvatar = expressAsyncHandler( async (req, res)=>{
+  try {
+    // const bufferImg = await sharp(req.file.buffer).resize({width:500, height:500}).png().toBuffer()
+    req.user.avatar = req.avatarname;
+    await req.user.save();
+    res.status(200).json ({message: 'Avatar updated successfully'})
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    res.status(400).send(error.message);
+  }
+
+});
+
+// const getAvatar = expressAsyncHandler(async (req,res)=>{
+//   try {
+//     console.log(req.params.id);
+//     const user = await User.findById(req.params.id)
+
+//     if(!user || !user.avatar){
+//         throw new Error()
+//     }
+//     res.set('Content-Type','image/png')
+//     res.send(user.avatar)
+// }catch(e) {
+//     console.log(`Error: ${error.message}`);
+//     res.status(400).send(error.message);
+// }
+// });
+
+// const deleteAvatar = expressAsyncHandler(async (req,res)=>{
+//   try {
+//     req.user.avatar = undefined
+//     await req.user.save()
+//     res.send()
+// }catch(e) {
+//     console.log(`Error: ${error.message}`);
+//     res.status(400).send(error.message);
+// }
+// });
 
 export {
-    createUser, login, getUser, updateUser
+    createUser, login, getUser, updateUser, uploadAvatar
 }
